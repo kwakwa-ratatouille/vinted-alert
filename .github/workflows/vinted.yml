@@ -26,7 +26,7 @@ jobs:
       - name: Vérifie Vinted
         shell: pwsh
         env:
-          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC || vars.NTFY_TOPIC }}
         run: ./VintedAlert.ps1 -UnTour
 
       - uses: actions/cache/save@v4
