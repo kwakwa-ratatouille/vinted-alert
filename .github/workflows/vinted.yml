@@ -1,0 +1,36 @@
+name: VintedAlert
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'   # toutes les 10 min (GitHub peut avoir du retard)
+  workflow_dispatch:          # bouton "Run workflow" pour lancer à la main
+
+concurrency:
+  group: vinted
+  cancel-in-progress: false
+
+jobs:
+  verifier:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      # Récupère la liste des annonces déjà vues lors des passages précédents
+      - uses: actions/cache/restore@v4
+        with:
+          path: deja_vus.json
+          key: deja-vus-${{ github.run_id }}
+          restore-keys: deja-vus-
+
+      - name: Vérifie Vinted
+        shell: pwsh
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+        run: ./VintedAlert.ps1 -UnTour
+
+      - uses: actions/cache/save@v4
+        if: always()
+        with:
+          path: deja_vus.json
+          key: deja-vus-${{ github.run_id }}
