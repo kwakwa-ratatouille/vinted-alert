@@ -1,18 +1,24 @@
 {
-    "ntfy_topic":  "",
-    "intervalle_secondes":  60,
-    "recherches":  [
-                       {
-                           "nom":  "Tamron 35-150",
-                           "url":  "https://www.vinted.fr/catalog?search_text=tamron%2035-150",
-                           "prix_max":  0,
-                           "mots_requis":  [
-                                               "35",
-                                               "150"
-                                           ],
-                           "mots_interdits":  [
-
-                                              ]
-                       }
-                   ]
+  "ntfy_topic": "",
+  "intervalle_secondes": 60,
+  "recherches": [
+    {
+      "nom": "Tamron 35-150 f/2-2.8",
+      "url": "https://www.vinted.fr/catalog?search_text=tamron%2035-150",
+      "prix_max": 1000,
+      "mots_requis": [
+        "35",
+        "150"
+      ],
+      "mots_interdits": [
+        "2.8-4",
+        "2,8-4",
+        "2.8 - 4",
+        "2,8 - 4",
+        "f/2.8-4",
+        "A043",
+        "OSD"
+      ]
+    }
+  ]
 }
