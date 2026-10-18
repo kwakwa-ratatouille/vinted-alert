@@ -1,1 +1,18 @@
-{"ntfy_topic":"","intervalle_secondes":60,"recherches":[{"nom":"Nike Dunk","url":"https://www.vinted.fr/catalog?search_text=nike%20dunk","prix_max":60,"mots_interdits":["enfant","kids"]}]}
+{
+    "ntfy_topic":  "",
+    "intervalle_secondes":  60,
+    "recherches":  [
+                       {
+                           "nom":  "Tamron 35-150",
+                           "url":  "https://www.vinted.fr/catalog?search_text=tamron%2035-150",
+                           "prix_max":  0,
+                           "mots_requis":  [
+                                               "35",
+                                               "150"
+                                           ],
+                           "mots_interdits":  [
+
+                                              ]
+                       }
+                   ]
+}
