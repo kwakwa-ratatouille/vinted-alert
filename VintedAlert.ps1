@@ -120,6 +120,9 @@ while ($true) {
                 if ($r.prix_max -and $it.Prix -and $it.Prix -gt $r.prix_max) { continue }
                 $interdit = $r.mots_interdits | Where-Object { $_ -and $it.Desc -match [regex]::Escape($_) }
                 if ($interdit) { continue }
+                # Tous les mots requis doivent être dans le titre (la recherche Vinted est floue)
+                $manquant = $r.mots_requis | Where-Object { $_ -and $it.Titre -notmatch [regex]::Escape($_) }
+                if ($manquant) { continue }
                 if ($envoyes -ge $MaxNotifsParTour) { continue }
                 $envoyes++
                 Log "NOUVEAU [$($r.nom)] $($it.Prix) € - $($it.Titre)" Green
