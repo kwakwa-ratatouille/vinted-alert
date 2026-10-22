@@ -43,7 +43,30 @@ function Save-Seen($s) {
     @{ ids = @($ids); init = @($s.init.Keys) } | ConvertTo-Json -Compress | Out-File $SeenPath -Encoding utf8
 }
 
+function Get-ItemsLeboncoin($url) {
+    # Le site bloque les robots, mais l'API de l'appli mobile répond : on lui envoie le texte de la recherche
+    $texte = [regex]::Match($url, '[?&]text=([^&]*)').Groups[1].Value
+    if (-not $texte) { throw "l'URL Leboncoin doit contenir text=... (ex: https://www.leboncoin.fr/recherche?text=tamron)" }
+    $texte = [Uri]::UnescapeDataString($texte.Replace('+', ' '))
+    $req = @{ limit = 35; filters = @{ keywords = @{ text = $texte } }; sort_by = 'time'; sort_order = 'desc' } | ConvertTo-Json -Depth 5 -Compress
+    $rep = Invoke-RestMethod 'https://api.leboncoin.fr/finder/search' -Method Post -TimeoutSec 30 `
+        -Headers @{ api_key = 'ba0c2dad52b3ec' } -UserAgent 'LBC;Android;11;SM-G973F;phone;0;wifi;5.80.0' `
+        -Body ([Text.Encoding]::UTF8.GetBytes($req)) -ContentType 'application/json; charset=utf-8'
+    foreach ($a in @($rep.ads)) {
+        $prix = if ($a.price) { [double]@($a.price)[0] } else { $null }
+        [pscustomobject]@{
+            Id    = "lbc-$($a.list_id)"
+            Titre = $a.subject
+            Desc  = "$($a.subject) - $prix € - $($a.location.city) (Leboncoin)"
+            Prix  = $prix
+            Url   = $a.url
+            Image = @($a.images.urls)[0]
+        }
+    }
+}
+
 function Get-Items($url) {
+    if ($url -match 'leboncoin\.fr') { return Get-ItemsLeboncoin $url }
     # Force le tri "plus récents d'abord"
     if ($url -notmatch 'order=') { $url += $(if ($url -match '\?') { '&' } else { '?' }) + 'order=newest_first' }
     $html = (Invoke-WebRequest $url -UserAgent $UA -UseBasicParsing -TimeoutSec 30).Content
