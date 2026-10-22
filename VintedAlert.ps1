@@ -49,8 +49,11 @@ function Get-ItemsLeboncoin($url) {
     if (-not $texte) { throw "l'URL Leboncoin doit contenir text=... (ex: https://www.leboncoin.fr/recherche?text=tamron)" }
     $texte = [Uri]::UnescapeDataString($texte.Replace('+', ' '))
     $req = @{ limit = 35; filters = @{ keywords = @{ text = $texte } }; sort_by = 'time'; sort_order = 'desc' } | ConvertTo-Json -Depth 5 -Compress
+    # PowerShell 7 refuse le format de ce User-Agent sans -SkipHeaderValidation (option absente de la 5.1)
+    $opts = @{ UserAgent = 'LBC;Android;11;SM-G973F;phone;0;wifi;5.80.0' }
+    if ($PSVersionTable.PSVersion.Major -ge 6) { $opts.SkipHeaderValidation = $true }
     $rep = Invoke-RestMethod 'https://api.leboncoin.fr/finder/search' -Method Post -TimeoutSec 30 `
-        -Headers @{ api_key = 'ba0c2dad52b3ec' } -UserAgent 'LBC;Android;11;SM-G973F;phone;0;wifi;5.80.0' `
+        -Headers @{ api_key = 'ba0c2dad52b3ec' } @opts `
         -Body ([Text.Encoding]::UTF8.GetBytes($req)) -ContentType 'application/json; charset=utf-8'
     foreach ($a in @($rep.ads)) {
         $prix = if ($a.price) { [double]@($a.price)[0] } else { $null }
