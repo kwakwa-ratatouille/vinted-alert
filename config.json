@@ -19,24 +19,6 @@
         "A043",
         "OSD"
       ]
-    },
-    {
-      "nom": "Tamron 35-150 (Leboncoin)",
-      "url": "https://www.leboncoin.fr/recherche?text=tamron%2035-150",
-      "prix_max": 1000,
-      "mots_requis": [
-        "35",
-        "150"
-      ],
-      "mots_interdits": [
-        "2.8-4",
-        "2,8-4",
-        "2.8 - 4",
-        "2,8 - 4",
-        "f/2.8-4",
-        "A043",
-        "OSD"
-      ]
     }
   ]
 }
